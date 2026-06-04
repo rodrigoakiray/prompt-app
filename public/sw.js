@@ -1,7 +1,7 @@
 /* Prompt Library — service worker. Precaches the app shell + data for full
    offline use; serves cache-first and falls back to index.html for navigations. */
 
-const CACHE = 'pl-v2';
+const CACHE = 'pl-v3';
 
 const ASSETS = [
   './',
