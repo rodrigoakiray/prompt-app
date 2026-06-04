@@ -182,7 +182,7 @@
       const oa = onAccent(c.accent);
       return `<a class="tile reveal" href="#/c/${c.id}" data-idx="${pad2(c.order)}"
         style="--accent:${c.accent};--on-accent:${oa};animation-delay:${i * 30}ms">
-        <span class="tile__idx">${pad2(c.order)} / 17</span>
+        <span class="tile__idx">${pad2(c.order)}</span>
         <span class="tile__name">${esc(c.name)}</span>
         <span class="tile__foot"><span class="tile__count">${c.count}</span>
         <span class="tile__sub">${plural(c.subcategories.length, 'set')}</span></span>
@@ -191,15 +191,18 @@
     return `
     <header class="masthead">
       <div class="masthead__top">
-        <span class="kicker">A curated index · ${DATA.categories.length} collections</span>
-        <div style="display:flex;gap:8px">
+        <div class="brand">
+          <span class="brand__name">Prompt Library</span>
+          <span class="brand__sub">${DATA.totalPrompts.toLocaleString()} prompts · ${DATA.categories.length} collections</span>
+        </div>
+        <div class="masthead__actions">
           <button class="iconbtn" data-action="theme-toggle" aria-label="Toggle theme">${themeIcon()}</button>
           <a class="iconbtn" href="#/settings" aria-label="Settings">${ICON.gear}</a>
         </div>
       </div>
-      <h1 class="masthead__title">Prompt<br><em>Library</em></h1>
-      <div class="masthead__meta"><b>${DATA.totalPrompts.toLocaleString()}</b> prompts ready to copy</div>
+      <a class="home-search" href="#/search">${ICON.search} Search ${DATA.totalPrompts.toLocaleString()} prompts</a>
     </header>
+    <div class="sec-label">Collections <span>${DATA.categories.length}</span></div>
     <div class="grid">${tiles}</div>`;
   }
 

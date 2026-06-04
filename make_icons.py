@@ -8,9 +8,9 @@ from PIL import Image, ImageDraw
 OUT = Path(__file__).resolve().parent / "public" / "icons"
 OUT.mkdir(parents=True, exist_ok=True)
 
-VERMILION = (225, 67, 40, 255)
-INK = (22, 19, 15, 255)
-CREAM = (247, 241, 227, 255)
+VERMILION = (24, 24, 27, 255)    # field (near-black ink)
+INK = (130, 130, 138, 255)       # typing cursor (muted gray)
+CREAM = (250, 250, 250, 255)     # brackets (off-white)
 
 
 def rounded(draw, box, r, fill):

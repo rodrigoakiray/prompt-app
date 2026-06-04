@@ -1,7 +1,7 @@
 /* Prompt Library — service worker. Precaches the app shell + data for full
    offline use; serves cache-first and falls back to index.html for navigations. */
 
-const CACHE = 'pl-v1';
+const CACHE = 'pl-v2';
 
 const ASSETS = [
   './',
@@ -10,12 +10,10 @@ const ASSETS = [
   './app.js',
   './manifest.webmanifest',
   './prompts.json',
-  './fonts/fraunces-600.woff2',
-  './fonts/fraunces-900.woff2',
-  './fonts/archivo-400.woff2',
-  './fonts/archivo-600.woff2',
-  './fonts/archivo-700.woff2',
-  './fonts/spline-mono-400.woff2',
+  './fonts/geist-400.woff2',
+  './fonts/geist-500.woff2',
+  './fonts/geist-600.woff2',
+  './fonts/geist-mono-400.woff2',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
