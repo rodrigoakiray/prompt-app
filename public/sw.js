@@ -1,11 +1,15 @@
 /* Prompt Library — service worker. Precaches the app shell + data for full
-   offline use; serves cache-first and falls back to index.html for navigations. */
+   offline use; serves cache-first.
 
-const CACHE = 'pl-v3';
+   NOTE: we deliberately do NOT cache './index.html'. On hosts with clean URLs
+   (Vercel `cleanUrls`), '/index.html' is a redirect, and a *redirected*
+   Response is illegal in respondWith() for a navigation (throws ERR_FAILED).
+   We cache the non-redirected root './' and rebuild a fresh shell from it. */
+
+const CACHE = 'pl-v4';
 
 const ASSETS = [
   './',
-  './index.html',
   './styles.css',
   './app.js',
   './manifest.webmanifest',
@@ -34,31 +38,43 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Rebuild a guaranteed non-redirected HTML response for navigations.
+async function shell() {
+  const cache = await caches.open(CACHE);
+  const r = (await cache.match('./')) || (await cache.match('./index.html'));
+  if (!r) return null;
+  const body = await r.clone().text();
+  return new Response(body, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+}
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
 
-  // Navigations -> serve the app shell (hash routing handles the rest offline).
+  // Navigations -> always serve the (rebuilt) app shell; hash routing + the
+  // cached data make the app work fully offline.
   if (req.mode === 'navigate') {
-    event.respondWith(
-      caches.match('./index.html').then((cached) => cached || fetch(req))
-    );
+    event.respondWith((async () => {
+      const s = await shell();
+      if (s) return s;
+      try { return await fetch(req); } catch (e) { return Response.error(); }
+    })());
     return;
   }
 
-  // Everything else: cache-first, then network (and cache the result).
-  event.respondWith(
-    caches.match(req).then((cached) => {
-      if (cached) return cached;
-      return fetch(req)
-        .then((res) => {
-          if (res && res.status === 200 && res.type === 'basic') {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, copy));
-          }
-          return res;
-        })
-        .catch(() => cached);
-    })
-  );
+  // Other GETs: cache-first, then network (and cache the result).
+  event.respondWith((async () => {
+    const cached = await caches.match(req);
+    if (cached) return cached;
+    try {
+      const res = await fetch(req);
+      if (res && res.status === 200 && res.type === 'basic') {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(req, copy));
+      }
+      return res;
+    } catch (e) {
+      return Response.error();
+    }
+  })());
 });
