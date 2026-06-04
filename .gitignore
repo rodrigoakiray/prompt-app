@@ -1,0 +1,10 @@
+# Test/screenshot artifacts
+.shots/
+.playwright-mcp/
+
+# Python
+__pycache__/
+*.pyc
+
+# Vercel
+.vercel/

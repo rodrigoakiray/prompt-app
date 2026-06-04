@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
+<title>Prompt Library</title>
+<meta name="description" content="Browse, search, and copy 2,168 curated AI prompts. Installable, works offline.">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" id="theme-color" content="#15130F">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Prompts">
+
+<!-- Avoid theme flash before CSS loads -->
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('pl:theme') || 'auto';
+    var dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+    var de = document.documentElement;
+    de.dataset.theme = dark ? 'dark' : 'light';
+    de.dataset.themePref = t;
+  } catch (e) {}
+})();
+</script>
+
+<link rel="preload" href="fonts/fraunces-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/archivo-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main id="app" class="app" aria-live="polite">
+  <div class="boot">
+    <span class="boot__mark">[<span class="boot__cursor"></span>]</span>
+    <span class="boot__txt">Loading library…</span>
+  </div>
+</main>
+
+<noscript>
+  <p style="padding:2rem;font-family:Georgia,serif">This app needs JavaScript to browse the prompt library.</p>
+</noscript>
+
+<script src="app.js" defer></script>
+</body>
+</html>
